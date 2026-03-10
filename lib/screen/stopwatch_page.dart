@@ -1,8 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:teknologimobile_tugas2/screen/calculator_page.dart';
-import 'package:teknologimobile_tugas2/screen/totalangka_page.dart';
-import 'package:teknologimobile_tugas2/screen/rumuspiramid_page.dart';
-import 'package:teknologimobile_tugas2/screen/menu_page.dart';
+import 'package:teknologimobile_tugas2/widget/navigation_drawer_widget.dart';
 
 class StopwatchPage extends StatefulWidget {
   const StopwatchPage({super.key, required this.username});
@@ -13,57 +12,105 @@ class StopwatchPage extends StatefulWidget {
 }
 
 class _StopwatchPageState extends State<StopwatchPage> {
-  Widget _loginButton(String pageName, WidgetBuilder pageBuilder, {bool enabled = true}) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-        backgroundColor: enabled ? Colors.grey : Colors.grey.shade300,
-      ),
-      onPressed: enabled
-          ? () {
-              Navigator.pop(context); // close the drawer
-              Navigator.push(context, MaterialPageRoute(builder: pageBuilder));
-            }
-          : null,
-      child: Text(pageName, style: TextStyle(color: enabled ? Colors.black : Colors.black38)),
-    );
+  final Stopwatch stopwatch = Stopwatch();
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startStopwatch() {
+    if (stopwatch.isRunning) {
+      return;
+    }
+
+    stopwatch.start();
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+    setState(() {});
+  }
+
+  void _stopStopwatch() {
+    stopwatch.stop();
+    _timer?.cancel();
+    _timer = null;
+    setState(() {});
+  }
+
+  void _resetStopwatch() {
+    stopwatch
+      ..stop()
+      ..reset();
+    _timer?.cancel();
+    _timer = null;
+    setState(() {});
+  }
+
+  String _formatElapsedTime() {
+    final elapsed = stopwatch.elapsed;
+    final minutes = elapsed.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = elapsed.inSeconds.remainder(60).toString().padLeft(2, '0');
+    final centiseconds = (elapsed.inMilliseconds.remainder(1000) ~/ 10)
+        .toString()
+        .padLeft(2, '0');
+
+    return '$minutes:$seconds:$centiseconds';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Stopwatch')),
-      drawer: Drawer(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Hello, ${widget.username}',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                _loginButton('Data Kelompok', (context) => MenuPage(username: widget.username)),
-                const SizedBox(height: 10),
-                _loginButton('Calculator', (context) => CalculatorPage(username: widget.username)),
-                const SizedBox(height: 10),
-                _loginButton('Stopwatch', (context) => StopwatchPage(username: widget.username), enabled: false),
-                const SizedBox(height: 10),
-                _loginButton('Total Angka', (context) => TotalangkaPage(username: widget.username)),
-                const SizedBox(height: 10),
-                _loginButton('Rumus Piramid', (context) => RumusPiramidPage(username: widget.username)),
-              ],
-            ),
-          ),
-        ),
+      drawer: NavigationDrawerWidget(
+        username: widget.username,
+        currentPage: 'Stopwatch',
       ),
-      body: const Center(
-        child: Text(
-          'Stopwatch Page',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Simple Stopwatch',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                _formatElapsedTime(),
+                style: const TextStyle(
+                  fontSize: 42,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 2,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                alignment: WrapAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: stopwatch.isRunning ? null : _startStopwatch,
+                    child: const Text('Start'),
+                  ),
+                  ElevatedButton(
+                    onPressed: stopwatch.isRunning ? _stopStopwatch : null,
+                    child: const Text('Stop'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _resetStopwatch,
+                    child: const Text('Reset'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
