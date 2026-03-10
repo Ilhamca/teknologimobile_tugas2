@@ -5,6 +5,7 @@ import 'package:teknologimobile_tugas2/screen/menu_page.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
