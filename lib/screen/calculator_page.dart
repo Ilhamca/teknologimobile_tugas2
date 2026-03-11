@@ -80,11 +80,16 @@ class _CalculatorPageState extends State<CalculatorPage> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            const Text('Masukkan dua angka untuk menghitung hasil tambah dan kurang.'),
+            const Text(
+              'Masukkan dua angka untuk menghitung hasil tambah dan kurang.',
+            ),
             const SizedBox(height: 16),
             TextField(
               controller: _firstNumberController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
               decoration: const InputDecoration(
                 labelText: 'Angka pertama',
                 border: OutlineInputBorder(),
@@ -93,7 +98,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
             const SizedBox(height: 12),
             TextField(
               controller: _secondNumberController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
               decoration: InputDecoration(
                 labelText: 'Angka kedua',
                 border: const OutlineInputBorder(),
@@ -125,9 +133,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Hasil penjumlahan: ${_formatNumber(_additionResult)}'),
+                    Text(
+                      'Hasil penjumlahan: ${_formatNumber(_additionResult)}',
+                    ),
                     const SizedBox(height: 8),
-                    Text('Hasil pengurangan: ${_formatNumber(_subtractionResult)}'),
+                    Text(
+                      'Hasil pengurangan: ${_formatNumber(_subtractionResult)}',
+                    ),
                   ],
                 ),
               ),

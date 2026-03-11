@@ -42,7 +42,8 @@ class _TotalangkaPageState extends State<TotalangkaPage> {
       final parsed = double.tryParse(part);
       if (parsed == null) {
         setState(() {
-          _errorText = 'Input tidak valid. Gunakan angka yang dipisahkan koma atau spasi.';
+          _errorText =
+              'Input tidak valid. Gunakan angka yang dipisahkan koma atau spasi.';
         });
         return;
       }
@@ -82,11 +83,16 @@ class _TotalangkaPageState extends State<TotalangkaPage> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            const Text('Masukkan beberapa angka, lalu pisahkan dengan koma atau spasi.'),
+            const Text(
+              'Masukkan beberapa angka, lalu pisahkan dengan koma atau spasi.',
+            ),
             const SizedBox(height: 16),
             TextField(
               controller: _numbersController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
               maxLines: 3,
               decoration: InputDecoration(
                 labelText: 'Input angka',
@@ -122,11 +128,19 @@ class _TotalangkaPageState extends State<TotalangkaPage> {
                   children: [
                     const Text(
                       'Total',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     Text(
-                      _total % 1 == 0 ? _total.toInt().toString() : _total.toString(),
-                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      _total % 1 == 0
+                          ? _total.toInt().toString()
+                          : _total.toString(),
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),

@@ -5,7 +5,6 @@ import 'package:teknologimobile_tugas2/screen/menu_page.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -15,6 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool isLoggedIn = false;
   bool isLoginFailed = false;
+  bool _obscurePassword = true;
 
   void _login() {
     String username = _usernameController.text;
@@ -25,7 +25,10 @@ class _LoginPageState extends State<LoginPage> {
         isLoggedIn = true;
         isLoginFailed = false;
       });
-      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => MenuPage(username: username)));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MenuPage(username: username)),
+      );
     } else {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -52,10 +55,6 @@ class _LoginPageState extends State<LoginPage> {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8),
-          Text(
-            'Welcome back to MiniLens!',
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-          ),
         ],
       ),
     );
@@ -66,14 +65,17 @@ class _LoginPageState extends State<LoginPage> {
     required String hint,
     required bool isLoginFailed,
     bool obscure = false,
+    Widget? suffixIcon,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       width: MediaQuery.of(context).size.width * 0.8,
       child: TextField(
         controller: controller,
+        obscureText: obscure,
         decoration: InputDecoration(
           hintText: hint,
+          suffixIcon: suffixIcon,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
@@ -84,7 +86,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        obscureText: obscure,
       ),
     );
   }
@@ -102,7 +103,18 @@ class _LoginPageState extends State<LoginPage> {
       controller: controller,
       hint: 'Password',
       isLoginFailed: isLoginFailed,
-      obscure: true,
+      obscure: _obscurePassword,
+      suffixIcon: IconButton(
+        icon: Icon(
+          _obscurePassword ? Icons.visibility_off : Icons.visibility,
+          color: Colors.grey,
+        ),
+        onPressed: () {
+          setState(() {
+            _obscurePassword = !_obscurePassword;
+          });
+        },
+      ),
     );
   }
 
