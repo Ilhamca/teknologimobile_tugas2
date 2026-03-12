@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teknologimobile_tugas2/widget/navigation_drawer_widget.dart';
+import 'package:teknologimobile_tugas2/theme/app_color.dart';
 
 class CalculatorPage extends StatefulWidget {
   const CalculatorPage({super.key, required this.username});
@@ -55,95 +56,222 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 
   String _formatNumber(double? value) {
-    if (value == null) {
-      return '-';
-    }
-
+    if (value == null) return '-';
     return value % 1 == 0 ? value.toInt().toString() : value.toStringAsFixed(2);
+  }
+
+  // Widget satu baris hasil (misal: "A + B = 30")
+  Widget _buildResultRow({
+    required String label,
+    required String expression,
+    required String result,
+    required Color color,
+    required IconData icon,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: color.withOpacity(0.25)),
+      ),
+      child: Row(
+        children: [
+          // Ikon operasi
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 22),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 2),
+                Text(
+                  expression,
+                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+          // Hasil besar di kanan
+          Text(
+            result,
+            style: TextStyle(
+              color: color,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final a = _firstNumberController.text.trim();
+    final b = _secondNumberController.text.trim();
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Calculator')),
+      appBar: AppBar(title: const Text('Kalkulator')),
       drawer: NavigationDrawerWidget(
         username: widget.username,
         currentPage: 'Calculator',
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header card
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.success, Color(0xFF059669)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.calculate_rounded, color: Colors.white, size: 32),
+                  SizedBox(width: 14),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Kalkulator',
+                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Penjumlahan & Pengurangan',
+                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Input Angka Pertama
             const Text(
-              'Penjumlahan dan Pengurangan',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              'Angka Pertama',
+              style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Masukkan dua angka untuk menghitung hasil tambah dan kurang.',
-            ),
-            const SizedBox(height: 16),
             TextField(
               controller: _firstNumberController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-                signed: true,
-              ),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
               decoration: const InputDecoration(
-                labelText: 'Angka pertama',
-                border: OutlineInputBorder(),
+                hintText: 'Masukkan angka pertama',
+                prefixIcon: Icon(Icons.looks_one_outlined, color: AppColors.primary),
               ),
             ),
-            const SizedBox(height: 12),
+
+            const SizedBox(height: 16),
+
+            // Input Angka Kedua
+            const Text(
+              'Angka Kedua',
+              style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+            ),
+            const SizedBox(height: 8),
             TextField(
               controller: _secondNumberController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-                signed: true,
-              ),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
               decoration: InputDecoration(
-                labelText: 'Angka kedua',
-                border: const OutlineInputBorder(),
+                hintText: 'Masukkan angka kedua',
+                prefixIcon: const Icon(Icons.looks_two_outlined, color: AppColors.primary),
                 errorText: _calculationError,
               ),
             ),
-            const SizedBox(height: 16),
+
+            const SizedBox(height: 20),
+
+            // Tombol Hitung dan Reset
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     onPressed: _calculateResults,
-                    child: const Text('Hitung'),
+                    icon: const Icon(Icons.play_arrow_rounded),
+                    label: const Text('Hitung'),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: OutlinedButton(
+                  child: OutlinedButton.icon(
                     onPressed: _resetCalculator,
-                    child: const Text('Reset Semua'),
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: const Text('Reset'),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+
+            const SizedBox(height: 24),
+
+            // Kartu Hasil
+            if (_additionResult != null || _subtractionResult != null) ...[
+              const Text(
+                'Hasil Perhitungan',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildResultRow(
+                label: 'Penjumlahan',
+                expression: '$a + $b',
+                result: _formatNumber(_additionResult),
+                color: AppColors.success,
+                icon: Icons.add_circle_outline_rounded,
+              ),
+              const SizedBox(height: 10),
+              _buildResultRow(
+                label: 'Pengurangan',
+                expression: '$a − $b',
+                result: _formatNumber(_subtractionResult),
+                color: AppColors.error,
+                icon: Icons.remove_circle_outline_rounded,
+              ),
+            ] else ...[
+              // Placeholder sebelum hitung
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: const Column(
                   children: [
+                    Icon(Icons.calculate_outlined, size: 40, color: AppColors.border),
+                    SizedBox(height: 8),
                     Text(
-                      'Hasil penjumlahan: ${_formatNumber(_additionResult)}',
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Hasil pengurangan: ${_formatNumber(_subtractionResult)}',
+                      'Masukkan angka lalu tekan Hitung',
+                      style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
                     ),
                   ],
                 ),
               ),
-            ),
+            ],
           ],
         ),
       ),
