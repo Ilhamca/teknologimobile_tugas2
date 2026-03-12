@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teknologimobile_tugas2/widget/navigation_drawer_widget.dart';
 
-
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key, required this.username});
 
@@ -14,7 +13,6 @@ class MenuPage extends StatefulWidget {
 class _MenuPageState extends State<MenuPage> {
   final List<Map<String, String>> _peopleDatabase = [
     {'name': 'Ilham Cesario Putra Wippri', 'studentId': '123230106'},
-    {'name': 'Farhan Satya Nugraha', 'studentId': '123230126'},
     {'name': 'Dhimas Rizky Maulana Efendi', 'studentId': '123230166'},
   ];
 
@@ -43,9 +41,7 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Main Menu'),
-      ),
+      appBar: AppBar(title: const Text('Main Menu')),
       drawer: NavigationDrawerWidget(
         username: widget.username,
         currentPage: 'Data Kelompok',
