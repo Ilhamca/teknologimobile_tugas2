@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:teknologimobile_tugas2/models/user_model.dart';
 import 'package:teknologimobile_tugas2/screen/menu_page.dart';
+import 'package:teknologimobile_tugas2/theme/app_color.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,11 +17,22 @@ class _LoginPageState extends State<LoginPage> {
   bool isLoginFailed = false;
   bool _obscurePassword = true;
 
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   void _login() {
     String username = _usernameController.text;
     String password = _passwordController.text;
 
-    if (username == user1.username && password == user1.password) {
+    final matchedUser = daftarUser
+        .where((u) => u.username == username && u.password == password)
+        .firstOrNull;
+
+    if (matchedUser != null) {
       setState(() {
         isLoggedIn = true;
         isLoginFailed = false;
@@ -33,8 +45,19 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Login gagal: Username atau Password salah'),
-          duration: Duration(seconds: 2),
+          content: const Row(
+            children: [
+              Icon(Icons.error_outline, color: Colors.white, size: 20),
+              SizedBox(width: 8),
+              Text('Username atau Password salah'),
+            ],
+          ),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          duration: const Duration(seconds: 2),
         ),
       );
       setState(() {
@@ -44,112 +67,212 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Widget _loginHeader() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.8,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Login',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 8),
-        ],
-      ),
-    );
-  }
-
-  Widget _inputField({
-    required TextEditingController controller,
-    required String hint,
-    required bool isLoginFailed,
-    bool obscure = false,
-    Widget? suffixIcon,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      width: MediaQuery.of(context).size.width * 0.8,
-      child: TextField(
-        controller: controller,
-        obscureText: obscure,
-        decoration: InputDecoration(
-          hintText: hint,
-          suffixIcon: suffixIcon,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            borderSide: BorderSide(
-              color: isLoginFailed ? Colors.red : Colors.blue,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _usernameField(TextEditingController controller, bool isLoginFailed) {
-    return _inputField(
-      controller: controller,
-      hint: 'Username',
-      isLoginFailed: isLoginFailed,
-    );
-  }
-
-  Widget _passwordField(TextEditingController controller, bool isLoginFailed) {
-    return _inputField(
-      controller: controller,
-      hint: 'Password',
-      isLoginFailed: isLoginFailed,
-      obscure: _obscurePassword,
-      suffixIcon: IconButton(
-        icon: Icon(
-          _obscurePassword ? Icons.visibility_off : Icons.visibility,
-          color: Colors.grey,
-        ),
-        onPressed: () {
-          setState(() {
-            _obscurePassword = !_obscurePassword;
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _loginButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        minimumSize: Size(MediaQuery.of(context).size.width * 0.8, 50),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-        backgroundColor: Colors.grey,
-      ),
-      onPressed: () {
-        _login();
-      },
-      child: Text('Login', style: TextStyle(color: Colors.black)),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      backgroundColor: AppColors.primary,
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _loginHeader(),
+            // Bagian atas - header biru
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Icon lingkaran putih
+                    Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.smartphone_rounded,
+                        color: Colors.white,
+                        size: 42,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Tugas Kelompok',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Teknologi & Pemrogaman Mobile',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
-            SizedBox(height: 20),
+            // Bagian bawah - form putih melengkung
+            Expanded(
+              flex: 3,
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: AppColors.bg,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(32),
+                    topRight: Radius.circular(32),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(28),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Masuk',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Silakan login untuk melanjutkan',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 28),
 
-            _usernameField(_usernameController, isLoginFailed),
+                      // Field username
+                      TextField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          prefixIcon: const Icon(
+                            Icons.person_outline,
+                            color: AppColors.primary,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: isLoginFailed
+                                  ? AppColors.error
+                                  : AppColors.border,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: AppColors.primary,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
 
-            _passwordField(_passwordController, isLoginFailed),
+                      // Field password
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          prefixIcon: const Icon(
+                            Icons.lock_outline,
+                            color: AppColors.primary,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                              color: AppColors.textSecondary,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: isLoginFailed
+                                  ? AppColors.error
+                                  : AppColors.border,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: AppColors.primary,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
 
-            SizedBox(height: 20),
+                      // Pesan error
+                      if (isLoginFailed) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.error_outline,
+                              color: AppColors.error,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Username atau password salah',
+                              style: TextStyle(
+                                color: AppColors.error,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
 
-            _loginButton(),
+                      const SizedBox(height: 28),
+
+                      // Tombol login
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _login,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text(
+                            'Masuk',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
