@@ -16,10 +16,13 @@ class AppColors {
 
   static const List<Color> menuColors = [
     Color(0xFF2563EB), // Data Kelompok - biru
+    Color(0xFF06B6D4), // Ganti Tanggal Lahir - cyan
     Color(0xFF10B981), // Calculator - hijau
     Color(0xFFF59E0B), // Ganjil/Genap - kuning
     Color(0xFFEF4444), // Stopwatch - merah
     Color(0xFF8B5CF6), // Total Angka - ungu
     Color(0xFFEC4899), // Rumus Piramid - pink
+    Color(0xFF3B82F6), // Konversi Hari Weton - biru muda
+    Color(0xFF14B8A6), // Konversi Hijriah-Masehi - teal
   ];
 }

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:teknologimobile_tugas2/screen/calculator_page.dart';
 import 'package:teknologimobile_tugas2/screen/ganjilgenapprima_page.dart';
+import 'package:teknologimobile_tugas2/screen/inputtanggallahir_page.dart';
+import 'package:teknologimobile_tugas2/screen/konversihariweton_page.dart';
+import 'package:teknologimobile_tugas2/screen/konversihijriahmasehi_page.dart';
 import 'package:teknologimobile_tugas2/screen/menu_page.dart';
 import 'package:teknologimobile_tugas2/screen/rumuspiramid_page.dart';
 import 'package:teknologimobile_tugas2/screen/stopwatch_page.dart';
 import 'package:teknologimobile_tugas2/screen/totalangka_page.dart';
 import 'package:teknologimobile_tugas2/theme/app_color.dart';
+
 
 class NavigationDrawerWidget extends StatelessWidget {
   const NavigationDrawerWidget({
@@ -17,20 +21,34 @@ class NavigationDrawerWidget extends StatelessWidget {
   final String username;
   final String currentPage;
 
+  // Fallback warna jika menuColors dalam app_color.dart overflow
+  Color _resolveMenuColor(int index) {
+    if (AppColors.menuColors.isEmpty) {
+      return AppColors.primary;
+    }
+    return AppColors.menuColors[index % AppColors.menuColors.length];
+  }
+
   // Data menu: nama, ikon, rute, warna
   static const List<Map<String, dynamic>> _menuItems = [
-    {'label': 'Data Kelompok',      'icon': Icons.group_rounded,          'page': 'Data Kelompok'},
-    {'label': 'Calculator',         'icon': Icons.calculate_rounded,       'page': 'Calculator'},
-    {'label': 'Ganjil/Genap/Prima', 'icon': Icons.functions_rounded,       'page': 'Ganjil/Genap/Prima'},
-    {'label': 'Stopwatch',          'icon': Icons.timer_rounded,           'page': 'Stopwatch'},
-    {'label': 'Total Angka',        'icon': Icons.add_chart_rounded,       'page': 'Total Angka'},
-    {'label': 'Rumus Piramid',      'icon': Icons.change_history_rounded,  'page': 'Rumus Piramid'},
+    {'label': 'Data Kelompok',            'icon': Icons.group_rounded,           'page': 'Data Kelompok'},
+    {'label': 'Ganti Tanggal Lahir',      'icon': Icons.cake,                    'page': 'Ganti Tanggal Lahir'},
+    {'label': 'Calculator',               'icon': Icons.calculate_rounded,       'page': 'Calculator'},
+    {'label': 'Ganjil/Genap/Prima',       'icon': Icons.functions_rounded,       'page': 'Ganjil/Genap/Prima'},
+    {'label': 'Stopwatch',                'icon': Icons.timer_rounded,           'page': 'Stopwatch'},
+    {'label': 'Total Angka',              'icon': Icons.add_chart_rounded,       'page': 'Total Angka'},
+    {'label': 'Rumus Piramid',            'icon': Icons.change_history_rounded,  'page': 'Rumus Piramid'},
+    {'label': 'Konversi Hari Weton',      'icon': Icons.calendar_today,          'page': 'Konversi Hari Weton'},
+    {'label': 'Konversi Hijriah-Masehi',  'icon': Icons.calendar_month,          'page': 'Konversi Hijriah-Masehi'},
+    
   ];
 
   WidgetBuilder _getPageBuilder(String pageName) {
     switch (pageName) {
       case 'Data Kelompok':
         return (ctx) => MenuPage(username: username);
+      case 'Ganti Tanggal Lahir':
+        return (ctx) => InputTanggalLahirPage(username: username);
       case 'Calculator':
         return (ctx) => CalculatorPage(username: username);
       case 'Ganjil/Genap/Prima':
@@ -41,6 +59,10 @@ class NavigationDrawerWidget extends StatelessWidget {
         return (ctx) => TotalangkaPage(username: username);
       case 'Rumus Piramid':
         return (ctx) => RumusPiramidPage(username: username);
+      case 'Konversi Hari Weton':
+        return (ctx) => KonversiHariWetonPage(username: username);
+      case 'Konversi Hijriah-Masehi':
+        return (ctx) => KonversiHijriahMasehiPage(username: username);
       default:
         return (ctx) => MenuPage(username: username);
     }
@@ -109,7 +131,7 @@ class NavigationDrawerWidget extends StatelessWidget {
                   final String label = item['label'] as String;
                   final IconData icon = item['icon'] as IconData;
                   final bool isActive = currentPage == label;
-                  final Color color = AppColors.menuColors[index];
+                  final Color color = _resolveMenuColor(index);
 
                   return Container(
                     margin: const EdgeInsets.only(bottom: 4),
