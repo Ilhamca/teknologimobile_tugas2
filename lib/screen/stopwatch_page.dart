@@ -47,13 +47,15 @@ class _StopwatchPageState extends State<StopwatchPage> {
     setState(() {});
   }
 
-  String _formatElapsedTime() {
-    final elapsed = stopwatch.elapsed;
-    final minutes = elapsed.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final seconds = elapsed.inSeconds.remainder(60).toString().padLeft(2, '0');
-    final centiseconds = (elapsed.inMilliseconds.remainder(1000) ~/ 10).toString().padLeft(2, '0');
-    return '$minutes:$seconds.$centiseconds';
-  }
+ String _formatElapsedTime() {
+  final elapsed = stopwatch.elapsed + const Duration(minutes: 00, seconds: 00);
+
+  final minutes = elapsed.inMinutes.toString().padLeft(2, '0');
+  final seconds = elapsed.inSeconds.remainder(60).toString().padLeft(2, '0');
+  final centiseconds = (elapsed.inMilliseconds.remainder(1000) ~/ 10).toString().padLeft(2, '0');
+
+  return '$minutes:$seconds.$centiseconds';
+}
 
   // Tombol bulat stopwatch
   Widget _buildControlButton({
