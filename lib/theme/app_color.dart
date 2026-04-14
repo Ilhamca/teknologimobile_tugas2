@@ -24,5 +24,6 @@ class AppColors {
     Color(0xFFEC4899), // Rumus Piramid - pink
     Color(0xFF3B82F6), // Konversi Hari Weton - biru muda
     Color(0xFF14B8A6), // Konversi Hijriah-Masehi - teal
+    Color.fromARGB(255, 109, 37, 37), // Konversi Tanggal Saka - coklat
   ];
 }

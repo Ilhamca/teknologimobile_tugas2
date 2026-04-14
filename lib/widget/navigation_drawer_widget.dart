@@ -9,7 +9,7 @@ import 'package:teknologimobile_tugas2/screen/rumuspiramid_page.dart';
 import 'package:teknologimobile_tugas2/screen/stopwatch_page.dart';
 import 'package:teknologimobile_tugas2/screen/totalangka_page.dart';
 import 'package:teknologimobile_tugas2/theme/app_color.dart';
-
+import 'package:teknologimobile_tugas2/screen/konversitanggalsaka_page.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   const NavigationDrawerWidget({
@@ -31,16 +31,52 @@ class NavigationDrawerWidget extends StatelessWidget {
 
   // Data menu: nama, ikon, rute, warna
   static const List<Map<String, dynamic>> _menuItems = [
-    {'label': 'Data Kelompok',            'icon': Icons.group_rounded,           'page': 'Data Kelompok'},
-    {'label': 'Ganti Tanggal Lahir',      'icon': Icons.cake,                    'page': 'Ganti Tanggal Lahir'},
-    {'label': 'Calculator',               'icon': Icons.calculate_rounded,       'page': 'Calculator'},
-    {'label': 'Ganjil/Genap/Prima',       'icon': Icons.functions_rounded,       'page': 'Ganjil/Genap/Prima'},
-    {'label': 'Stopwatch',                'icon': Icons.timer_rounded,           'page': 'Stopwatch'},
-    {'label': 'Total Angka',              'icon': Icons.add_chart_rounded,       'page': 'Total Angka'},
-    {'label': 'Rumus Piramid',            'icon': Icons.change_history_rounded,  'page': 'Rumus Piramid'},
-    {'label': 'Konversi Hari Weton',      'icon': Icons.calendar_today,          'page': 'Konversi Hari Weton'},
-    {'label': 'Konversi Hijriah-Masehi',  'icon': Icons.calendar_month,          'page': 'Konversi Hijriah-Masehi'},
-    
+    {
+      'label': 'Data Kelompok',
+      'icon': Icons.group_rounded,
+      'page': 'Data Kelompok',
+    },
+    {
+      'label': 'Ganti Tanggal Lahir',
+      'icon': Icons.cake,
+      'page': 'Ganti Tanggal Lahir',
+    },
+    {
+      'label': 'Calculator',
+      'icon': Icons.calculate_rounded,
+      'page': 'Calculator',
+    },
+    {
+      'label': 'Ganjil/Genap/Prima',
+      'icon': Icons.functions_rounded,
+      'page': 'Ganjil/Genap/Prima',
+    },
+    {'label': 'Stopwatch', 'icon': Icons.timer_rounded, 'page': 'Stopwatch'},
+    {
+      'label': 'Total Angka',
+      'icon': Icons.add_chart_rounded,
+      'page': 'Total Angka',
+    },
+    {
+      'label': 'Rumus Piramid',
+      'icon': Icons.change_history_rounded,
+      'page': 'Rumus Piramid',
+    },
+    {
+      'label': 'Konversi Hari Weton',
+      'icon': Icons.calendar_today,
+      'page': 'Konversi Hari Weton',
+    },
+    {
+      'label': 'Konversi Hijriah-Masehi',
+      'icon': Icons.calendar_month,
+      'page': 'Konversi Hijriah-Masehi',
+    },
+    {
+      'label': 'Konversi Tanggal Saka',
+      'icon': Icons.calendar_view_day,
+      'page': 'Konversi Tanggal Saka',
+    },
   ];
 
   WidgetBuilder _getPageBuilder(String pageName) {
@@ -63,6 +99,10 @@ class NavigationDrawerWidget extends StatelessWidget {
         return (ctx) => KonversiHariWetonPage(username: username);
       case 'Konversi Hijriah-Masehi':
         return (ctx) => KonversiHijriahMasehiPage(username: username);
+      case 'Konversi Tanggal Saka':
+        return (ctx) => KonversiTanggalSaka(
+          username: username,
+        ); // Ganti dengan halaman Konversi Tanggal Saka jika sudah dibuat
       default:
         return (ctx) => MenuPage(username: username);
     }
@@ -96,7 +136,11 @@ class NavigationDrawerWidget extends StatelessWidget {
                       color: Colors.white.withOpacity(0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.person_rounded, color: Colors.white, size: 28),
+                    child: const Icon(
+                      Icons.person_rounded,
+                      color: Colors.white,
+                      size: 28,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Text(
@@ -124,7 +168,10 @@ class NavigationDrawerWidget extends StatelessWidget {
             // List menu navigasi
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 itemCount: _menuItems.length,
                 itemBuilder: (context, index) {
                   final item = _menuItems[index];
@@ -136,7 +183,9 @@ class NavigationDrawerWidget extends StatelessWidget {
                   return Container(
                     margin: const EdgeInsets.only(bottom: 4),
                     decoration: BoxDecoration(
-                      color: isActive ? color.withOpacity(0.1) : Colors.transparent,
+                      color: isActive
+                          ? color.withOpacity(0.1)
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
@@ -144,16 +193,24 @@ class NavigationDrawerWidget extends StatelessWidget {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: isActive ? color.withOpacity(0.15) : AppColors.bg,
+                          color: isActive
+                              ? color.withOpacity(0.15)
+                              : AppColors.bg,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Icon(icon, color: isActive ? color : AppColors.textSecondary, size: 22),
+                        child: Icon(
+                          icon,
+                          color: isActive ? color : AppColors.textSecondary,
+                          size: 22,
+                        ),
                       ),
                       title: Text(
                         label,
                         style: TextStyle(
                           fontSize: 14,
-                          fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                          fontWeight: isActive
+                              ? FontWeight.w600
+                              : FontWeight.normal,
                           color: isActive ? color : AppColors.textPrimary,
                         ),
                       ),
@@ -173,7 +230,9 @@ class NavigationDrawerWidget extends StatelessWidget {
                               Navigator.pop(context);
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: _getPageBuilder(label)),
+                                MaterialPageRoute(
+                                  builder: _getPageBuilder(label),
+                                ),
                               );
                             },
                       shape: RoundedRectangleBorder(
@@ -184,7 +243,6 @@ class NavigationDrawerWidget extends StatelessWidget {
                 },
               ),
             ),
-
           ],
         ),
       ),
